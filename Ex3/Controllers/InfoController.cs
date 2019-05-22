@@ -17,7 +17,7 @@ namespace Ex3.Controllers
 
         [HttpGet]
         public ActionResult display(string ip, int port, int interval) {
-            ClientModel infoModel = new ClientModel(ip, port);
+            ClientModel infoModel = new ClientModel(ip, port, interval);
             return View();
         }
     }

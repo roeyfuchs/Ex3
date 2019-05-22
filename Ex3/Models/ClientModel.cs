@@ -15,6 +15,7 @@ namespace Ex3.Models {
     public class ClientModel : IInfoModel {
         private string ip;
         private int port;
+        private int waitingTime = 0;
         private bool needStop = false;
         private const int bufferSize = 1024;
         private const string lonCommand = "get /position/longitude-deg\r\n";
@@ -23,20 +24,23 @@ namespace Ex3.Models {
         public event PropertyChangedEventHandler PropertyChanged;
 
 
-        List<Tuple<double, double>> location;
-
         public double Lat { get; set; }
         public double Lon { get; set; }
 
 
-        public ClientModel(string ip, int port) {
+        public ClientModel(string ip, int port, int intervalPerSec) {
+            System.Diagnostics.Debug.WriteLine("regular const");
             this.ip = ip;
             this.port = port;
+            if(intervalPerSec != 0) {
+                this.waitingTime = (int)((1 / (Double)intervalPerSec) * 1000);
+            }
             Task serverTask = new Task(() => {
                 this.Start();
             });
             serverTask.Start();
         }
+
 
         private void Start() {
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -57,6 +61,13 @@ namespace Ex3.Models {
                 recv = Encoding.ASCII.GetString(buffer, 0, iRx);
                 this.Lat = fromSimToDobule(recv);
                 System.Diagnostics.Debug.WriteLine("Lat = " + this.Lat);
+
+                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(this.Lat +","+ this.Lon));
+                System.Diagnostics.Debug.WriteLine("wating time ==" + this.waitingTime);
+                if (this.waitingTime == 0) {
+                    break;
+                }
+                Thread.Sleep(this.waitingTime);
 
             }
             socket.Close();
