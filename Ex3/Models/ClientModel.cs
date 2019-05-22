@@ -29,7 +29,6 @@ namespace Ex3.Models {
 
 
         public ClientModel(string ip, int port, int intervalPerSec) {
-            System.Diagnostics.Debug.WriteLine("regular const");
             this.ip = ip;
             this.port = port;
             if(intervalPerSec != 0) {
@@ -53,17 +52,14 @@ namespace Ex3.Models {
                 int iRx = socket.Receive(buffer);
                 string recv = Encoding.ASCII.GetString(buffer, 0, iRx);
                 this.Lon = fromSimToDobule(recv);
-                System.Diagnostics.Debug.WriteLine("Lon = " + this.Lon);
 
                 socket.Send(System.Text.Encoding.ASCII.GetBytes(latCommand));
                 Array.Clear(buffer, 0, buffer.Length);
                 iRx = socket.Receive(buffer);
                 recv = Encoding.ASCII.GetString(buffer, 0, iRx);
                 this.Lat = fromSimToDobule(recv);
-                System.Diagnostics.Debug.WriteLine("Lat = " + this.Lat);
 
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(this.Lat +","+ this.Lon));
-                System.Diagnostics.Debug.WriteLine("wating time ==" + this.waitingTime);
                 if (this.waitingTime == 0) {
                     break;
                 }

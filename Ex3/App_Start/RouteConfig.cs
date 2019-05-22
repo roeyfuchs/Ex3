@@ -18,12 +18,12 @@ namespace Ex3
 
             routes.MapRoute("save", "save/{ip}/{port}/{interval}/{samplingTime}/{fileName}",
                defaults: new { controller = "Info", action = "save" });
-            /*routes.MapRoute(
-                name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Info", action = "display", id = UrlParameter.Optional }
-            );*/
+           
 
+            routes.MapRoute("index", "", 
+                defaults: new {controller= "info", action = "index"});
+
+           
         }
     }
 }
