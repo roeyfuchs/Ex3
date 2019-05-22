@@ -3,6 +3,20 @@
     ViewBag.Title = "display";
 }
 
-<h2>display</h2>
 <canvas id="myCanvas" style="border:1px solid #000000;"></canvas>
+
+<script>
+    var can = document.getElementById("myCanvas");
+
+    can.style.width = window.innerWidth + "px";
+    can.style.height = window.innerHeight + "px";
+
+    var background = new Image();
+    background.src = "./worldMap.png";
+
+    // Make sure the image is loaded first otherwise nothing will draw.
+    background.onload = function () {
+        ctx.drawImage(background, 0, 0);
+    }
+</script>
 
