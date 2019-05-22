@@ -15,6 +15,11 @@ namespace Ex3
 
             routes.MapRoute("display", "display/{ip}/{port}/{interval}",
                 defaults: new { controller = "Info", action = "display", interval="0"});
+
+            routes.MapRoute("save", "save/{ip}/{port}/{interval}/{samplingTime}/{fileName}",
+               defaults: new { controller = "Info", action = "save" });
+           
+
             routes.MapRoute("index", "", 
                 defaults: new {controller= "info", action = "index"});
 

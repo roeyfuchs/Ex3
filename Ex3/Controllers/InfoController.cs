@@ -24,6 +24,12 @@ namespace Ex3.Controllers
             this.client.PropertyChanged += this.Client_PropertyChanged;
             return View();
         }
+        [HttpGet]
+        public ActionResult save(string ip, int port, int interval,int samplingTime,string fileName)
+        {
+            ClientModel infoModel = new ClientModel(ip, port, interval);
+            return View();
+        }
 
         private void Client_PropertyChanged(object sender, PropertyChangedEventArgs e) {
             ///update the javascript! take the information by this.client.Lat ....
