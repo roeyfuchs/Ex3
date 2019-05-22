@@ -20,5 +20,11 @@ namespace Ex3.Controllers
             ClientModel infoModel = new ClientModel(ip, port, interval);
             return View();
         }
+        [HttpGet]
+        public ActionResult save(string ip, int port, int interval,int samplingTime,string fileName)
+        {
+            ClientModel infoModel = new ClientModel(ip, port, interval);
+            return View();
+        }
     }
 }
