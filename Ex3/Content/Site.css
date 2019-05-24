@@ -2,8 +2,9 @@
     width: 100%;
     height: 100%;
     margin: 0;
-    padding: 0;
-    overflow: hidden;
+    background-image: url(/Content/worldMap.png);
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -20,8 +21,11 @@ textarea {
 }
 
 
-canvas {
+#myCanvas {
+    display: block;
     position: absolute;
-}
+    top: 0px;
+    left: 0px;
+} 
 
 

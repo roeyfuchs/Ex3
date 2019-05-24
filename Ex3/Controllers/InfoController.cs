@@ -25,6 +25,9 @@ namespace Ex3.Controllers
         public ActionResult display(string ip, int port, int interval) {
             this.client = new ClientModel(ip, port, interval);
             this.client.PropertyChanged += this.Client_PropertyChanged;
+
+            ViewBag.Interval =  (int)((1 / (Double)interval) * 1000);
+
             return View();
         }
         [HttpGet]
@@ -45,7 +48,8 @@ namespace Ex3.Controllers
         }
 
         private void Client_PropertyChanged(object sender, PropertyChangedEventArgs e) {
-            ///update the javascript! take the information by this.client.Lat ....
+            ViewBag.Lon = client.Lon;
+            ViewBag.Lat = client.Lat;
         }
     }
 }
