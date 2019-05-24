@@ -5,12 +5,17 @@ using System.Web;
 
 namespace Ex3.Models
 {
-    public class FlightDetails
+    public class FlightDetailsEventArgs : EventArgs
     {
         private const string comma = ",";
         private const string newLine = "\n";
-        public double LON { set; get; }
-        public double LAT { set; get; }
-        public new string ToString => LON + comma + LAT+newLine;
+        double LON { set; get; }
+        double LAT { set; get; }
+        new string ToString => LON + comma + LAT + newLine;
+        public FlightDetailsEventArgs(double LON, double LAT)
+        {
+            this.LAT = LAT;
+            this.LON = LON;
+        }
     }
 }

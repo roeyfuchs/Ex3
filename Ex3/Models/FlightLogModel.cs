@@ -13,11 +13,19 @@ namespace Ex3.Models
         {
             this.fileName = fileName;   
         }
-        private void PropertyChanged(object sender, PropertyChangedEventArgs e)
+        public void PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             //write data
-            System.IO.File.AppendAllText(fileName, e.ToString());
+            System.IO.File.AppendAllText(fileName,e.PropertyName+Environment.NewLine);
         }
+       /* public Tuple<double,double> ReadData()
+        {
+            const char splitter = ',';
+            if (System.IO.File.Exists(fileName))
+            {
+                System.IO.File.Re
+            }
+        }*/
 
     }
 }
