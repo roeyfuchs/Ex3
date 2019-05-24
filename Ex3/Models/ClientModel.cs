@@ -58,7 +58,7 @@ namespace Ex3.Models {
                 iRx = socket.Receive(buffer);
                 recv = Encoding.ASCII.GetString(buffer, 0, iRx);
                 this.Lat = fromSimToDobule(recv);
-
+                System.Diagnostics.Debug.WriteLine("data drom server");
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(this.Lat +","+ this.Lon));
                 if (this.waitingTime == 0) {
                     break;

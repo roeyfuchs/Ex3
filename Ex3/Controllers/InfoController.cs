@@ -15,6 +15,7 @@ namespace Ex3.Controllers
         ClientModel client;
         private const int miliToSecond = 1000;
         FlightLogModel flightLogModel;
+        private Timer timer;
         // GET: Info
         public ActionResult Index()
         {
@@ -36,7 +37,7 @@ namespace Ex3.Controllers
             this.flightLogModel = new FlightLogModel(fileName);
             ActionResult actionResult = this.display(ip, port, interval);
             this.client.PropertyChanged += flightLogModel.PropertyChanged;
-            Timer timer = new Timer();
+            this.timer = new Timer();
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             timer.Interval = miliToSecond*samplingTime;
             timer.Enabled = true;
@@ -44,10 +45,14 @@ namespace Ex3.Controllers
         }
         private void OnTimedEvent(object source, ElapsedEventArgs e)
         {
+            System.Diagnostics.Debug.WriteLine("bye");
             this.client.PropertyChanged -= flightLogModel.PropertyChanged;
+            this.timer.Enabled = false;
         }
-
+        int i = 0;
         private void Client_PropertyChanged(object sender, PropertyChangedEventArgs e) {
+            i++;
+            System.Diagnostics.Debug.WriteLine(i);
             ViewBag.Lon = client.Lon;
             ViewBag.Lat = client.Lat;
         }
