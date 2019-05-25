@@ -24,6 +24,8 @@ namespace Ex3.Controllers
             this.client.PropertyChanged += this.Client_PropertyChanged;
 
             ViewBag.Interval =  (int)((1 / (Double)interval) * 1000);
+            ViewBag.Lon = Double.NaN; 
+            ViewBag.Lat = Double.NaN;
 
             return View();
         }
