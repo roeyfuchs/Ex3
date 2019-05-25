@@ -109,6 +109,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\FlightDetails.cs" />
+    <Compile Include="Models\FlightLogModel.cs" />
     <Compile Include="Models\Interface\IInfoModel.cs" />
     <Compile Include="Models\ClientModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
