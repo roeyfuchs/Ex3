@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Web;
 
 namespace Ex3.Models
@@ -9,26 +11,50 @@ namespace Ex3.Models
     public class FlightLogModel
     {
         string fileName;
-        int i=0;
+        private const char comma = ',';
+        Queue<FlightDetails> fileInfo;
         public FlightLogModel(string fileName)
         {
-            this.fileName = fileName;   
+            this.fileName = fileName;
+            fileInfo = new Queue<FlightDetails>();
         }
-        public void PropertyChanged(object sender, PropertyChangedEventArgs e)
+        public void PropertyChanged(object sender, FlightDetailsEventArgs e)
         {
             //write data
-            i++;
-            System.Diagnostics.Debug.WriteLine("ser: "+i);
-            System.IO.File.AppendAllText(fileName,e.PropertyName+Environment.NewLine);
-        }
-       /* public Tuple<double,double> ReadData()
-        {
-            const char splitter = ',';
-            if (System.IO.File.Exists(fileName))
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream fsout = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+            try
             {
-                System.IO.File.Re
+                using (fsout)
+                {
+                    bf.Serialize(fsout, e.FlightDetails);
+                }
             }
-        }*/
+            catch
+            {
+                System.Diagnostics.Debug.WriteLine("Error in serialzing");
+            }
+        }
+        public void LoadFileData()
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream fsin = new FileStream("employee.binary", FileMode.Open, FileAccess.Read, FileShare.None);
+            try
+            {
+                using (fsin)
+                {
+                    this.fileInfo = (Queue<FlightDetails>)bf.Deserialize(fsin);
+                }
+            }
+            catch
+            {
+                System.Diagnostics.Debug.WriteLine("Error in deserializg");
+            }
+        }
+        public FlightDetails GetCurrentFlightDetails()
+        {
+            return this.fileInfo.Dequeue();
+        }
 
     }
 }

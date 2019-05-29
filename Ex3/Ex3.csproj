@@ -110,6 +110,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\FlightDetails.cs" />
+    <Compile Include="Models\FlightDetailsEventArgs.cs" />
     <Compile Include="Models\FlightLogModel.cs" />
     <Compile Include="Models\Interface\IInfoModel.cs" />
     <Compile Include="Models\ClientModel.cs" />
