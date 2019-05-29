@@ -5,17 +5,19 @@ using System.Web;
 
 namespace Ex3.Models
 {
-    public class FlightDetailsEventArgs : EventArgs
+    [Serializable]
+    public class FlightDetails
     {
-        private const string comma = ",";
-        private const string newLine = "\n";
-        double LON { set; get; }
-        double LAT { set; get; }
-        new string ToString => LON + comma + LAT + newLine;
-        public FlightDetailsEventArgs(double LON, double LAT)
+        public double lon { set; get; }
+        public double lat { set; get; }
+        public double throttle { set; get; }
+        public double rudder { set; get; }
+        public FlightDetails(double lon, double lat, double throttle, double rudder)
         {
-            this.LAT = LAT;
-            this.LON = LON;
+            this.lat = lat;
+            this.lon = lon;
+            this.throttle = throttle;
+            this.rudder = rudder;
         }
     }
 }

@@ -59,6 +59,7 @@ namespace Ex3.Models {
                 recv = Encoding.ASCII.GetString(buffer, 0, iRx);
                 this.Lat = fromSimToDobule(recv);
                 System.Diagnostics.Debug.WriteLine("data drom server");
+                // TODO: ENVOKE NEW FlightDetailsEventArgs
                 this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(this.Lat +","+ this.Lon));
                 if (this.waitingTime == 0) {
                     break;

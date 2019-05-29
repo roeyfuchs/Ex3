@@ -24,14 +24,26 @@ namespace Ex3.Controllers
 
         [HttpGet]
         public ActionResult display(string ip, int port, int interval) {
-            this.client = new ClientModel(ip, port, interval);
-            this.client.PropertyChanged += this.Client_PropertyChanged;
+            //display/ip/port/ interval - optional
+            System.Net.IPAddress iPAddress;
+            if (System.Net.IPAddress.TryParse(ip, out iPAddress))
+            {
+                this.client = new ClientModel(ip, port, interval);
+                this.client.PropertyChanged += this.Client_PropertyChanged;
 
-            ViewBag.Interval =  (int)((1 / (Double)interval) * 1000);
-            ViewBag.Lon = Double.NaN; 
-            ViewBag.Lat = Double.NaN;
+                ViewBag.Interval = (int)((1 / (Double)interval) * 1000);
+                ViewBag.Lon = Double.NaN;
+                ViewBag.Lat = Double.NaN;
 
-            return View();
+                return View();
+            }
+            else
+            {
+                //display/file name/interval
+                string filePath = ip;
+                int animationTime = port;
+                this.flightLogModel = new FlightLogModel(filePath);
+            }
         }
         [HttpGet]
         public ActionResult save(string ip, int port, int interval,int samplingTime,string fileName)
