@@ -65,19 +65,16 @@ namespace Ex3.Controllers
             this.client.PropertyChanged -= flightLogModel.PropertyChanged;
             this.timer.Enabled = false;
         }
-        int i = 0;
-        private void Client_PropertyChanged(object sender, PropertyChangedEventArgs e) {
-            i++;
-            System.Diagnostics.Debug.WriteLine(i);
-            ViewBag.Lon = client.Lon;
-            ViewBag.Lat = client.Lat;
+        private void Client_PropertyChanged(object sender, FlightDetailsEventArgs e) {
+            ViewBag.Lon = e.FlightDetails.Lon;
+            ViewBag.Lat = e.FlightDetails.Lat;
+            ViewBag.rudder = e.FlightDetails.Rudder;
+            ViewBag.throttle = e.FlightDetails.Throttle;
         }
 
         [HttpPost]
         public void SetValues() {
-            /*Tuple<double, double> vals = client.getValues();
-            ViewBag.Lon = vals.Item1;
-            ViewBag.Lat = vals.Item2;*/
+            this.client.GetValues();
         }
     }
 }

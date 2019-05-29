@@ -3,13 +3,15 @@
     ViewBag.Title = "display";
 }
 
-<canvas id="myCanvas"  style="border:1px solid #000000;"></canvas>
+<canvas id="myCanvas" style="border:1px solid #000000;"></canvas>
 
 <script>
+    console.log("HEY");
     var width = 180;
     var height = 90;
     document.getElementById("myCanvas").style.height = "100vh";
     document.getElementById("myCanvas").style.width = "100vw";
+
 
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -31,41 +33,47 @@
             if (x == NaN || y == NaN) {
                 online = false;
                 continue;
-            }
+                }
             arrX.push(x);
             arrY.push(y);
             drawAll(ctx, arrX, arrY);
             await sleep(@ViewBag.Interval);
-        }
-        alert('route finished!\nhope you enjoyd to flight with us,\nEl-ILAN')
-    }
-    function drawAll(ctx, x, y) {
-        ctx.clearRect(-width, -height, ctx.canvas.width, ctx.canvas.height);
-        ctx.beginPath();
-        ctx.moveTo(x[0], y[0]);
-        /* don't forget to delete the i*i */
-        for (var i = 1; i < x.length; i++) {
-            mx = (i*i) + x[i];
-            my = (i * i) + y[i];      
-            ctx.lineTo(mx, my);
-        }
-        /*just for testing: */
-        endX = x[x.length - 1] + (x.length - 1) * (x.length - 1);
-        endY = y[y.length - 1] + (y.length - 1) * (y.length - 1);
-        /* when submit, we need to change it to  x[x.length - 1] and y[y.length - 1]*/
-        
-        ctx.arc(endX, endY , 1, 0, 2 * Math.PI);
-        ctx.stroke();
-        ctx.closePath();
+         }
+            alert('route finished!\nhope you enjoyd to flight with us,\nEl-ILAN')
+      }
 
+        function drawAll(ctx, x, y) {
+            ctx.clearRect(-width, -height, ctx.canvas.width, ctx.canvas.height);
+            ctx.beginPath();
+            ctx.moveTo(x[0], y[0]);
+            /* don't forget to delete the i*i */
+            for (var i = 1; i < x.length; i++) {
+              mx = (i*i) + x[i];
+              my = (i * i) + y[i];
+                ctx.lineTo(mx, my);
+            }
+            /*just for testing: */
+            endX = x[x.length - 1] + (x.length - 1) * (x.length - 1);
+            endY = y[y.length - 1] + (y.length - 1) * (y.length - 1);
+            /* when submit, we need to change it to  x[x.length - 1] and y[y.length - 1]*/
+
+            ctx.arc(endX, endY , 1, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.closePath();
     }
 
-    function refreshData () {
-           $.ajax({
-                type: "Post",
-               url: "/Info/SetValues",  //controller and action method.                
-            });
+    function refreshData() {
+        $.ajax({
+            type: "Post",
+            url: "/Info/SetValues",
+            success: function () {
+                alert('blabla');
+            }
+
+        });
     }
+
+
 
 </script>
 
