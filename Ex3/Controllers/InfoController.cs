@@ -37,16 +37,15 @@ namespace Ex3.Controllers
                 ViewBag.Interval = (int)((1 / (Double)interval) * 1000);
                 ViewBag.Lon = Double.NaN;
                 ViewBag.Lat = Double.NaN;
-
-                return View();
             }
             else
             {
                 //display/file name/interval
                 string filePath = ip;
                 int animationTime = port;
-                this.flightLogModel = new FlightLogModel(filePath);
+                this.flightLogModel = new FlightLogModel(filePath);  
             }
+            return View();
         }
         [HttpGet]
         public ActionResult save(string ip, int port, int interval,int samplingTime,string fileName)
