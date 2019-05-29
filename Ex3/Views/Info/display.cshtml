@@ -17,24 +17,27 @@
     getData();
 
     async function getData() {
+        var online = true;
         var c = document.getElementById("myCanvas");
         var ctx = c.getContext("2d");
         ctx.translate(width, height);
         var arrX = [];
         var arrY = [];
 
-        while (true) {
+        while (online) {
+            refreshData();
             var y = @ViewBag.Lat;
             var x = @ViewBag.Lon;
             if (x == NaN || y == NaN) {
-                await sleep(@ViewBag.Interval);
-                    continue;
+                online = false;
+                continue;
             }
             arrX.push(x);
             arrY.push(y);
             drawAll(ctx, arrX, arrY);
             await sleep(@ViewBag.Interval);
         }
+        alert('route finished!\nhope you enjoyd to flight with us,\nEl-ILAN')
     }
     function drawAll(ctx, x, y) {
         ctx.clearRect(-width, -height, ctx.canvas.width, ctx.canvas.height);
@@ -56,6 +59,14 @@
         ctx.closePath();
 
     }
+
+    function refreshData () {
+           $.ajax({
+                type: "Post",
+               url: "/Info/SetValues",  //controller and action method.                
+            });
+    }
+
 </script>
 
 

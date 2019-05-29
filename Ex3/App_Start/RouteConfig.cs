@@ -23,7 +23,11 @@ namespace Ex3
             routes.MapRoute("index", "", 
                 defaults: new {controller= "info", action = "index"});
 
-           
+            routes.MapRoute(
+                name: "Default",
+                url: "{controller}/{action}/{id}",
+                defaults: new { controller = "Info", action = "Index", id = UrlParameter.Optional }
+            );
         }
     }
 }

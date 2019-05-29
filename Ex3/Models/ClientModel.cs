@@ -15,64 +15,54 @@ namespace Ex3.Models {
     public class ClientModel : IInfoModel {
         private string ip;
         private int port;
-        private int waitingTime = 0;
-        private bool needStop = false;
+        Socket socket;
         private const int bufferSize = 1024;
         private const string lonCommand = "get /position/longitude-deg\r\n";
         private const string latCommand = "get /position/latitude-deg\r\n";
-
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public Tuple<double, double> getValues() {
+            double lat = getLat();
+            double lon = getLon();
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(lat + "," + lon));
+            return new Tuple<double, double>(lon, lat);
+        }
 
+        private double getLat() {
+            return getInfo(latCommand);
+        }
+        private double getLon() {
+            return getInfo(lonCommand);
+        }
+
+        private double getInfo(string str) {
+            socket.Send(System.Text.Encoding.ASCII.GetBytes(str));
+            byte[] buffer = new byte[bufferSize];
+            int iRx = socket.Receive(buffer);
+            string recv = Encoding.ASCII.GetString(buffer, 0, iRx);
+            return fromSimToDobule(recv);
+        }
+        
+
+        
         public double Lat { get; set; }
         public double Lon { get; set; }
-
-
+        
         public ClientModel(string ip, int port, int intervalPerSec) {
             this.ip = ip;
             this.port = port;
-            if(intervalPerSec != 0) {
-                this.waitingTime = (int)((1 / (Double)intervalPerSec) * 1000);
-            }
-            Task serverTask = new Task(() => {
-                this.Start();
-            });
-            serverTask.Start();
+            this.Start();
         }
-
 
         private void Start() {
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             IPAddress ipAdd = IPAddress.Parse(this.ip);
             IPEndPoint remoteEP = new IPEndPoint(ipAdd, this.port);
             socket.Connect(remoteEP);
-            while (!needStop) {
-                socket.Send(System.Text.Encoding.ASCII.GetBytes(lonCommand));
-                byte[] buffer = new byte[bufferSize];
-                int iRx = socket.Receive(buffer);
-                string recv = Encoding.ASCII.GetString(buffer, 0, iRx);
-                this.Lon = fromSimToDobule(recv);
-
-                socket.Send(System.Text.Encoding.ASCII.GetBytes(latCommand));
-                Array.Clear(buffer, 0, buffer.Length);
-                iRx = socket.Receive(buffer);
-                recv = Encoding.ASCII.GetString(buffer, 0, iRx);
-                this.Lat = fromSimToDobule(recv);
-                System.Diagnostics.Debug.WriteLine("data drom server");
-                this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(this.Lat +","+ this.Lon));
-                if (this.waitingTime == 0) {
-                    break;
-                }
-                Thread.Sleep(this.waitingTime);
-
-            }
-            socket.Close();
-
-
         }
 
         public void Stop() {
-            this.needStop = true;
+            socket.Close();
         }
 
 
@@ -81,5 +71,6 @@ namespace Ex3.Models {
             onlyNum = onlyNum.Trim('\'');
             return Double.Parse(onlyNum);
         }
+
     }
 }

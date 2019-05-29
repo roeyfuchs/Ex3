@@ -1,4 +1,5 @@
 ﻿using Ex3.Models;
+using Ex3.Models.Interface;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,10 +13,12 @@ namespace Ex3.Controllers
     public class InfoController : Controller
     {
 
-        ClientModel client;
+        IInfoModel client;
         private const int miliToSecond = 1000;
         FlightLogModel flightLogModel;
         private Timer timer;
+
+
         // GET: Info
         public ActionResult Index()
         {
@@ -57,6 +60,13 @@ namespace Ex3.Controllers
             System.Diagnostics.Debug.WriteLine(i);
             ViewBag.Lon = client.Lon;
             ViewBag.Lat = client.Lat;
+        }
+
+        [HttpPost]
+        public void SetValues() {
+            /*Tuple<double, double> vals = client.getValues();
+            ViewBag.Lon = vals.Item1;
+            ViewBag.Lat = vals.Item2;*/
         }
     }
 }
