@@ -10,8 +10,7 @@ using System.Web.Mvc;
 
 namespace Ex3.Controllers
 {
-    public class InfoController : Controller
-    {
+    public class InfoController : Controller {
 
         IInfoModel client;
         private const int miliToSecond = 1000;
@@ -20,8 +19,7 @@ namespace Ex3.Controllers
 
 
         // GET: Info
-        public ActionResult Index()
-        {
+        public ActionResult Index() {
             return View();
         }
 
@@ -30,38 +28,39 @@ namespace Ex3.Controllers
             //display/ip/port/ interval - optional
             //bbbjjhjfh
             System.Net.IPAddress iPAddress;
-            if (System.Net.IPAddress.TryParse(ip, out iPAddress))
-            {
-                this.client = new ClientModel(ip, port, interval);
+            if (System.Net.IPAddress.TryParse(ip, out iPAddress)) {
+                ClientModel client = ClientModel.Instance;
+                client.Ip = ip;
+                client.Port = port;
+                client.Start();
+                this.client = client;
+                
                 this.client.PropertyChanged += this.Client_PropertyChanged;
 
                 ViewBag.Interval = (int)((1 / (Double)interval) * 1000);
                 ViewBag.Lon = Double.NaN;
                 ViewBag.Lat = Double.NaN;
-            }
-            else
-            {
+            } else {
                 //display/file name/interval
                 string filePath = ip;
                 int animationTime = port;
-                this.flightLogModel = new FlightLogModel(filePath);  
+                this.flightLogModel = FlightLogModel.Instance;
             }
             return View();
         }
         [HttpGet]
-        public ActionResult save(string ip, int port, int interval,int samplingTime,string fileName)
-        {
-            this.flightLogModel = new FlightLogModel(fileName);
+        public ActionResult save(string ip, int port, int interval, int samplingTime, string fileName) {
+            this.flightLogModel = FlightLogModel.Instance;
+            this.flightLogModel.FileName = fileName;
             ActionResult actionResult = this.display(ip, port, interval);
             this.client.PropertyChanged += flightLogModel.PropertyChanged;
             this.timer = new Timer();
             timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-            timer.Interval = miliToSecond*samplingTime;
+            timer.Interval = miliToSecond * samplingTime;
             timer.Enabled = true;
             return actionResult;
         }
-        private void OnTimedEvent(object source, ElapsedEventArgs e)
-        {
+        private void OnTimedEvent(object source, ElapsedEventArgs e) {
             System.Diagnostics.Debug.WriteLine("bye");
             this.client.PropertyChanged -= flightLogModel.PropertyChanged;
             this.timer.Enabled = false;
@@ -74,8 +73,15 @@ namespace Ex3.Controllers
         }
 
         [HttpPost]
-        public void SetValues() {
-            this.client.GetValues();
+        public string SetValues() {
+            try {
+                ClientModel cl = ClientModel.Instance;
+                string str = cl.GetValues();
+                return str;
+            } catch (Exception e) {
+                e.ToString();
+            }
+            return "lala";
         }
     }
 }

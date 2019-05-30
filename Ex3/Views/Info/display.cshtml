@@ -6,7 +6,8 @@
 <canvas id="myCanvas" style="border:1px solid #000000;"></canvas>
 
 <script>
-    console.log("HEY");
+    var tempx;
+    var tempy;
     var width = 180;
     var height = 90;
     document.getElementById("myCanvas").style.height = "100vh";
@@ -28,8 +29,8 @@
 
         while (online) {
             refreshData();
-            var y = @ViewBag.Lat;
-            var x = @ViewBag.Lon;
+            var y = tempy;
+            var x = tempx;
             if (x == NaN || y == NaN) {
                 online = false;
                 continue;
@@ -66,8 +67,13 @@
         $.ajax({
             type: "Post",
             url: "/Info/SetValues",
-            success: function () {
-                alert('blabla');
+            success: function (xml) {
+                var xmlDoc = $.parseXML(xml),
+                $xml = $(xmlDoc),
+                tempx = $xml.find("Lon").text();
+                tempy = $xml.find("Lat").text();
+                console.log(tempx);
+                console.log(tempy);
             }
 
         });

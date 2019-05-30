@@ -12,7 +12,7 @@ namespace Ex3.Models.Interface {
 
     interface IInfoModel {
         event infoHandel PropertyChanged;
-        void GetValues();
+        string GetValues();
         double Lat { get; set; }
         double Lon { get; set; }
     }

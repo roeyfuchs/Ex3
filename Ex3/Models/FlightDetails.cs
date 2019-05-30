@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Xml;
 
 namespace Ex3.Models
 {
@@ -19,5 +20,15 @@ namespace Ex3.Models
             this.Throttle = throttle;
             this.Rudder = rudder;
         }
+
+        public void ToXml(XmlWriter writer) {
+            writer.WriteStartElement("info");
+            writer.WriteElementString("Lon", this.Lon.ToString());
+            writer.WriteElementString("Lat", this.Lat.ToString());
+            writer.WriteElementString("Throttle", this.Throttle.ToString());
+            writer.WriteElementString("Rudder", this.Rudder.ToString());
+            writer.WriteEndElement();
+        }
+
     }
 }

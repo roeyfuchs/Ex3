@@ -10,19 +10,34 @@ namespace Ex3.Models
 {
     public class FlightLogModel
     {
-        string fileName;
         private const char comma = ',';
         Queue<FlightDetails> fileInfo;
-        public FlightLogModel(string fileName)
+
+        private static FlightLogModel s_instace = null;
+
+
+
+        public static FlightLogModel Instance {
+            get {
+                if (s_instace == null) {
+                    s_instace = new FlightLogModel();
+                }
+                return s_instace;
+            }
+        }
+
+        private FlightLogModel()
         {
-            this.fileName = fileName;
             fileInfo = new Queue<FlightDetails>();
         }
+
+        public string FileName { set; get; }
+
         public void PropertyChanged(object sender, FlightDetailsEventArgs e)
         {
             //write data
             BinaryFormatter bf = new BinaryFormatter();
-            FileStream fsout = new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+            FileStream fsout = new FileStream(FileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
             try
             {
                 using (fsout)
