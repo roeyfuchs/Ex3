@@ -72,11 +72,11 @@ namespace Ex3.Models {
         }
 
         private double GetInfo(string str) {
-            string recv = null;
-                    this.socket.Send(System.Text.Encoding.ASCII.GetBytes(str));
-                    byte[] buffer = new byte[bufferSize];
-                    int iRx = socket.Receive(buffer);
-                  recv = Encoding.ASCII.GetString(buffer, 0, iRx);
+            this.socket.Send(System.Text.Encoding.ASCII.GetBytes(str));
+            byte[] buffer = new byte[bufferSize];
+            int iRx = socket.Receive(buffer);
+            string recv = Encoding.ASCII.GetString(buffer, 0, iRx);
+            recv = recv.Split('\r')[0];
             return FromSimToDobule(recv);
         }
 

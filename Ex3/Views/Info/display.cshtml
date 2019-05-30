@@ -26,14 +26,14 @@
         ctx.translate(width, height);
         var arrX = [];
         var arrY = [];
-        
+        var y;
+        var x;
         while (online) {
             refreshData();
-            console.log(tempx);
-            console.log(tempy);
-            var y = tempy;
-            var x = tempx;
-            console.log(y);
+            console.log("X: " + tempx);
+            console.log("Y: " + tempy);
+            y = tempy;
+            x = tempx;
             if (typeof y == 'undefined' || typeof x == 'undefined') {
                 await sleep(@ViewBag.Interval);
                 continue;
@@ -41,7 +41,7 @@
             if (x == NaN || y == NaN) {
                 online = false;
                 continue;
-                }
+             }
             arrX.push(x);
             arrY.push(y);
             drawAll(ctx, arrX, arrY);
@@ -59,6 +59,7 @@
               mx = (i*i) + x[i];
               my = (i * i) + y[i];
                 ctx.lineTo(mx, my);
+                console.log("mx :" + mx + " my: " + my);
             }
             /*just for testing: */
             endX = x[x.length - 1] + (x.length - 1) * (x.length - 1);
@@ -70,15 +71,18 @@
             ctx.closePath();
     }
 
-    function refreshData() {
+    async function refreshData() {
         $.ajax({
             type: "Post",
             url: "/Info/SetValues",
-            success: function (xml) {
-                var xmlDoc = $.parseXML(xml),
-                $xml = $(xmlDoc),
-                tempx = $xml.find("Lon").text();
-                tempy = $xml.find("Lat").text();
+            success: function (txt) {
+                parser = new DOMParser();
+                xmlDoc = parser.parseFromString(txt, "text/xml");
+
+
+                tempy = parseFloat(xmlDoc.getElementsByTagName("Lat")[0].childNodes[0].nodeValue);
+                tempx = parseFloat(xmlDoc.getElementsByTagName("Lon")[0].childNodes[0].nodeValue);
+
             }
 
         });
