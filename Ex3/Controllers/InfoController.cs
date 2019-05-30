@@ -79,7 +79,7 @@ namespace Ex3.Controllers
                 string str = cl.GetValues();
                 return str;
             } catch (Exception e) {
-                e.ToString();
+                System.Diagnostics.Debug.WriteLine(e.ToString());
             }
             return "lala";
         }

@@ -26,11 +26,18 @@
         ctx.translate(width, height);
         var arrX = [];
         var arrY = [];
-
+        
         while (online) {
             refreshData();
+            console.log(tempx);
+            console.log(tempy);
             var y = tempy;
             var x = tempx;
+            console.log(y);
+            if (typeof y == 'undefined' || typeof x == 'undefined') {
+                await sleep(@ViewBag.Interval);
+                continue;
+            }
             if (x == NaN || y == NaN) {
                 online = false;
                 continue;
@@ -72,8 +79,6 @@
                 $xml = $(xmlDoc),
                 tempx = $xml.find("Lon").text();
                 tempy = $xml.find("Lat").text();
-                console.log(tempx);
-                console.log(tempy);
             }
 
         });
