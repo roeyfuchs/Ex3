@@ -51,13 +51,17 @@ namespace Ex3.Controllers
         [HttpGet]
         public ActionResult save(string ip, int port, int interval, int samplingTime, string fileName) {
             this.flightLogModel = FlightLogModel.Instance;
-            this.flightLogModel.FileName = fileName;
+            this.flightLogModel.FileName = fileName;          
             ActionResult actionResult = this.display(ip, port, interval);
             this.client.PropertyChanged += flightLogModel.PropertyChanged;
-            this.timer = new Timer();
-            timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-            timer.Interval = miliToSecond * samplingTime;
-            timer.Enabled = true;
+
+
+
+
+            /*   this.timer = new Timer();
+               timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+               timer.Interval = miliToSecond * samplingTime;
+               timer.Enabled = true;*/
             return actionResult;
         }
         private void OnTimedEvent(object source, ElapsedEventArgs e) {
