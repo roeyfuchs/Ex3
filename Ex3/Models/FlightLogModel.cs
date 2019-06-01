@@ -18,7 +18,8 @@ namespace Ex3.Models
         private static Queue<FlightDetails> fileInfo;
         private static FlightLogModel s_instace = null;
         private static int countSampling { set; get; }
-     
+        private readonly object lockQueue = new object();
+
 
         public static FlightLogModel Instance
         {
@@ -52,25 +53,25 @@ namespace Ex3.Models
         }
         private void LoadFileData()
         {
-            fileInfo = new Queue<FlightDetails>();
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream fsin = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.None);
-            try
-            {
-                using (fsin)
+                fileInfo = new Queue<FlightDetails>();
+                BinaryFormatter bf = new BinaryFormatter();
+                FileStream fsin = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.None);
+                try
                 {
-                    while (fsin.Position != fsin.Length)
+                    using (fsin)
                     {
-                        fileInfo.Enqueue((FlightDetails)bf.Deserialize(fsin));
+                        while (fsin.Position != fsin.Length)
+                        {
+                            fileInfo.Enqueue((FlightDetails)bf.Deserialize(fsin));
+                        }
                     }
                 }
-            }
-            catch
-            {
-                System.Diagnostics.Debug.WriteLine("Error in deserializg");
-            }
-            //enqueue Nan Flight data
-            fileInfo.Enqueue(EnququeNanFightData());
+                catch
+                {
+                    System.Diagnostics.Debug.WriteLine("Error in deserializg");
+                }
+                //enqueue Nan Flight data
+                fileInfo.Enqueue(EnququeNanFightData());
         }
         public FlightDetails EnququeNanFightData()
         {
@@ -78,21 +79,24 @@ namespace Ex3.Models
         }
         public string GetCurrentFlightDetails()
         {
-            if (fileInfo == null)
+
+            lock (lockQueue)
             {
+                if (fileInfo == null|| fileInfo.Count==0) {
                 LoadFileData();
             }
-            FlightDetails currentData= fileInfo.Dequeue();
-            StringBuilder sb = new StringBuilder();
-            XmlWriterSettings settings = new XmlWriterSettings();
-            XmlWriter writer = XmlWriter.Create(sb, settings);
-            writer.WriteStartDocument();
-            writer.WriteStartElement("infos");
-            currentData.ToXml(writer);
-            writer.WriteEndElement();
-            writer.WriteEndDocument();
-            writer.Flush();
-            return sb.ToString();
+                FlightDetails currentData = fileInfo.Dequeue();
+                StringBuilder sb = new StringBuilder();
+                XmlWriterSettings settings = new XmlWriterSettings();
+                XmlWriter writer = XmlWriter.Create(sb, settings);
+                writer.WriteStartDocument();
+                writer.WriteStartElement("infos");
+                currentData.ToXml(writer);
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+                writer.Flush();
+                return sb.ToString();
+            }
         }
 
     }
