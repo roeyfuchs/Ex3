@@ -37,7 +37,7 @@
                 await sleep(@ViewBag.Interval);
                 continue;
             }
-            if (x == NaN || y == NaN) {
+            if (isNaN(x) || isNaN(y)) {
                 online = false;
                 continue;
              }
