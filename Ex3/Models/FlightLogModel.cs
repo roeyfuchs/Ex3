@@ -27,7 +27,6 @@ namespace Ex3.Models
                 if (s_instace == null)
                 {
                     s_instace = new FlightLogModel();
-                    fileInfo = new Queue<FlightDetails>();
                     countSampling = 0;
                 }
                 return s_instace;
@@ -51,8 +50,9 @@ namespace Ex3.Models
                }
             SamplingCounter?.Invoke(this, new EventArgs());
         }
-        public void LoadFileData()
+        private void LoadFileData()
         {
+            fileInfo = new Queue<FlightDetails>();
             BinaryFormatter bf = new BinaryFormatter();
             FileStream fsin = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.None);
             try
@@ -69,10 +69,30 @@ namespace Ex3.Models
             {
                 System.Diagnostics.Debug.WriteLine("Error in deserializg");
             }
+            //enqueue Nan Flight data
+            fileInfo.Enqueue(EnququeNanFightData());
         }
-        public FlightDetails GetCurrentFlightDetails()
+        public FlightDetails EnququeNanFightData()
         {
-            return fileInfo.Dequeue();
+            return new FlightDetails(Double.NaN, Double.NaN, Double.NaN, Double.NaN);
+        }
+        public string GetCurrentFlightDetails()
+        {
+            if (fileInfo == null)
+            {
+                LoadFileData();
+            }
+            FlightDetails currentData= fileInfo.Dequeue();
+            StringBuilder sb = new StringBuilder();
+            XmlWriterSettings settings = new XmlWriterSettings();
+            XmlWriter writer = XmlWriter.Create(sb, settings);
+            writer.WriteStartDocument();
+            writer.WriteStartElement("infos");
+            currentData.ToXml(writer);
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
+            writer.Flush();
+            return sb.ToString();
         }
 
     }

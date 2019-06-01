@@ -13,7 +13,7 @@ namespace Ex3.Controllers
     public class InfoController : Controller {
 
         IInfoModel client;
-        int countSampling=0;
+        private static bool runAnimation;
         private const int miliToSecond = 1000;
         FlightLogModel flightLogModel;
         private SamplingData samplingData;
@@ -27,9 +27,9 @@ namespace Ex3.Controllers
         [HttpGet]
         public ActionResult display(string ip, int port, int interval) {
             //display/ip/port/ interval - optional
-            //bbbjjhjfh
             System.Net.IPAddress iPAddress;
             if (System.Net.IPAddress.TryParse(ip, out iPAddress)) {
+                runAnimation = false;
                 ClientModel client = ClientModel.Instance;
                 client.Reset();
                 client.Ip = ip;
@@ -46,13 +46,16 @@ namespace Ex3.Controllers
                 //display/file name/interval
                 string filePath = ip;
                 int animationTime = port;
+                runAnimation = true;
                 this.flightLogModel = FlightLogModel.Instance;
+                this.flightLogModel.FileName = filePath;
             }
             return View();
         }
         [HttpGet]
         public ActionResult save(string ip, int port, int interval, int samplingTime, string fileName) {
             this.flightLogModel = FlightLogModel.Instance;
+            runAnimation = true;
             this.flightLogModel.FileName = fileName;
             samplingData = new SamplingData(interval * samplingTime);
             ActionResult actionResult = this.display(ip, port, interval);
@@ -80,9 +83,19 @@ namespace Ex3.Controllers
 
         [HttpPost]
         public string SetValues() {
-            ClientModel cl = ClientModel.Instance;
-            string str = cl.GetValues();
-            return str;
+            if (runAnimation)
+            {
+                //flight animation
+                FlightLogModel fl = FlightLogModel.Instance;
+                return fl.GetCurrentFlightDetails();
+
+            }
+            else
+            {
+                ClientModel cl = ClientModel.Instance;
+                string str = cl.GetValues();
+                return str;
+            };
         }
     }
 }
