@@ -34,14 +34,16 @@ namespace Ex3.Controllers
                 client.Reset();
                 client.Ip = ip;
                 client.Port = port;
+                client.Interval = (int)((1 / (Double)interval) * 1000);
                 client.Start();
                 this.client = client;
                 
                 this.client.PropertyChanged += this.Client_PropertyChanged;
-
+               
                 ViewBag.Interval = (int)((1 / (Double)interval) * 1000);
                 ViewBag.Lon = Double.NaN;
                 ViewBag.Lat = Double.NaN;
+                ViewBag.sec = interval;
             } else {
                 //display/file name/interval
                 string filePath = ip;
@@ -94,6 +96,7 @@ namespace Ex3.Controllers
             {
                 ClientModel cl = ClientModel.Instance;
                 string str = cl.GetValues();
+                 System.Diagnostics.Debug.WriteLine(str);
                 return str;
             };
         }

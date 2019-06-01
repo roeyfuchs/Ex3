@@ -3,7 +3,6 @@
     ViewBag.Title = "save";
 }
 
-
 <canvas id="myCanvas" style="border:1px solid #000000;"></canvas>
 
 <script>
@@ -31,15 +30,14 @@
         var x;
         while (online) {
             refreshData();
-            console.log("X: " + tempx);
-            console.log("Y: " + tempy);
             y = tempy;
             x = tempx;
+            //in a case of undefined infromation from the simultaor (error in socket for example)
             if (typeof y == 'undefined' || typeof x == 'undefined') {
                 await sleep(@ViewBag.Interval);
                 continue;
             }
-            if (x == NaN || y == NaN) {
+            if (isNaN(x) || isNaN(y)) {
                 online = false;
                 continue;
              }
@@ -79,11 +77,8 @@
             success: function (txt) {
                 parser = new DOMParser();
                 xmlDoc = parser.parseFromString(txt, "text/xml");
-
-
                 tempy = parseFloat(xmlDoc.getElementsByTagName("Lat")[0].childNodes[0].nodeValue);
                 tempx = parseFloat(xmlDoc.getElementsByTagName("Lon")[0].childNodes[0].nodeValue);
-
             }
 
         });
@@ -92,4 +87,5 @@
 
 
 </script>
+
 

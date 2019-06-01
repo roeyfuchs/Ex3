@@ -30,5 +30,19 @@ namespace Ex3.Models
             writer.WriteEndElement();
         }
 
+        public void AddToString(ref string lon, ref string lat, ref string thr, ref string rud) {
+            if (lon != string.Empty) {
+                lon += ",";
+                lat += ",";
+                thr += ",";
+                rud += ",";
+            }
+            lon += this.Lon.ToString();
+            lat += this.Lat.ToString();
+            thr += this.Throttle.ToString();
+            rud += this.Rudder.ToString();
+        }
+
+
     }
 }
