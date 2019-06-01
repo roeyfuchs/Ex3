@@ -18,7 +18,7 @@ namespace Ex3.Models
         public bool Sample()
         {
             ++samplingSoFar;
-            if (samplingSoFar < amountOfSamplingDesired)
+            if (samplingSoFar <= amountOfSamplingDesired)
             {
                 return true;
             }
