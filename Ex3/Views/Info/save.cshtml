@@ -1,0 +1,95 @@
+﻿
+@{
+    ViewBag.Title = "save";
+}
+
+
+<canvas id="myCanvas" style="border:1px solid #000000;"></canvas>
+
+<script>
+    var tempx;
+    var tempy;
+    var width = 180;
+    var height = 90;
+    document.getElementById("myCanvas").style.height = "100vh";
+    document.getElementById("myCanvas").style.width = "100vw";
+
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    getData();
+
+    async function getData() {
+        var online = true;
+        var c = document.getElementById("myCanvas");
+        var ctx = c.getContext("2d");
+        ctx.translate(width, height);
+        var arrX = [];
+        var arrY = [];
+        var y;
+        var x;
+        while (online) {
+            refreshData();
+            console.log("X: " + tempx);
+            console.log("Y: " + tempy);
+            y = tempy;
+            x = tempx;
+            if (typeof y == 'undefined' || typeof x == 'undefined') {
+                await sleep(@ViewBag.Interval);
+                continue;
+            }
+            if (x == NaN || y == NaN) {
+                online = false;
+                continue;
+             }
+            arrX.push(x);
+            arrY.push(y);
+            drawAll(ctx, arrX, arrY);
+            await sleep(@ViewBag.Interval);
+         }
+            alert('route finished!\nhope you enjoyd to flight with us,\nEl-ILAN')
+      }
+
+        function drawAll(ctx, x, y) {
+            ctx.clearRect(-width, -height, ctx.canvas.width, ctx.canvas.height);
+            ctx.beginPath();
+            ctx.moveTo(x[0], y[0]);
+            /* don't forget to delete the i*i */
+            for (var i = 1; i < x.length; i++) {
+              mx = (i*i) + x[i];
+              my = (i * i) + y[i];
+                ctx.lineTo(mx, my);
+                console.log("mx :" + mx + " my: " + my);
+            }
+            /*just for testing: */
+            endX = x[x.length - 1] + (x.length - 1) * (x.length - 1);
+            endY = y[y.length - 1] + (y.length - 1) * (y.length - 1);
+            /* when submit, we need to change it to  x[x.length - 1] and y[y.length - 1]*/
+
+            ctx.arc(endX, endY , 1, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.closePath();
+    }
+
+    async function refreshData() {
+        $.ajax({
+            type: "Post",
+            url: "/Info/SetValues",
+            success: function (txt) {
+                parser = new DOMParser();
+                xmlDoc = parser.parseFromString(txt, "text/xml");
+
+
+                tempy = parseFloat(xmlDoc.getElementsByTagName("Lat")[0].childNodes[0].nodeValue);
+                tempx = parseFloat(xmlDoc.getElementsByTagName("Lon")[0].childNodes[0].nodeValue);
+
+            }
+
+        });
+    }
+
+
+
+</script>
+

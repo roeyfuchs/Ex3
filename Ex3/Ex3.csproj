@@ -114,6 +114,7 @@
     <Compile Include="Models\FlightLogModel.cs" />
     <Compile Include="Models\Interface\IInfoModel.cs" />
     <Compile Include="Models\ClientModel.cs" />
+    <Compile Include="Models\SamplingData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +128,7 @@
     <Content Include="Views\Info\display.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Info\index.cshtml" />
+    <Content Include="Views\Info\save.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
