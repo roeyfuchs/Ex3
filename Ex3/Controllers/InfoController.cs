@@ -13,9 +13,10 @@ namespace Ex3.Controllers
     public class InfoController : Controller {
 
         IInfoModel client;
+        int countSampling=0;
         private const int miliToSecond = 1000;
         FlightLogModel flightLogModel;
-        private Timer timer;
+        private SamplingData samplingData;
 
 
         // GET: Info
@@ -51,23 +52,23 @@ namespace Ex3.Controllers
         [HttpGet]
         public ActionResult save(string ip, int port, int interval, int samplingTime, string fileName) {
             this.flightLogModel = FlightLogModel.Instance;
-            this.flightLogModel.FileName = fileName;          
+            this.flightLogModel.FileName = fileName;
+            samplingData = new SamplingData(interval * samplingTime);
             ActionResult actionResult = this.display(ip, port, interval);
             this.client.PropertyChanged += flightLogModel.PropertyChanged;
-
-
-
-
-            /*   this.timer = new Timer();
-               timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-               timer.Interval = miliToSecond * samplingTime;
-               timer.Enabled = true;*/
+            flightLogModel.SamplingCounter += this.CountSamplingRaised;
             return actionResult;
         }
-        private void OnTimedEvent(object source, ElapsedEventArgs e) {
-            System.Diagnostics.Debug.WriteLine("bye");
-            this.client.PropertyChanged -= flightLogModel.PropertyChanged;
-            this.timer.Enabled = false;
+        private void CountSamplingRaised(object sender,EventArgs e)
+        {
+            if (this.samplingData != null)
+            {
+                if (!samplingData.Sample())
+                {
+                    samplingData = null;
+                    client.PropertyChanged -= flightLogModel.PropertyChanged;
+                }
+            }
         }
         private void Client_PropertyChanged(object sender, FlightDetailsEventArgs e) {
             ViewBag.Lon = e.FlightDetails.Lon;

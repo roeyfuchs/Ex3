@@ -114,6 +114,7 @@
     <Compile Include="Models\FlightLogModel.cs" />
     <Compile Include="Models\Interface\IInfoModel.cs" />
     <Compile Include="Models\ClientModel.cs" />
+    <Compile Include="Models\SamplingData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

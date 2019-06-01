@@ -13,10 +13,12 @@ namespace Ex3.Models
 {
     public class FlightLogModel
     {
+        public event EventHandler SamplingCounter;
         public string FileName { get; set; }
-        private const char comma = ',';
         private static Queue<FlightDetails> fileInfo;
         private static FlightLogModel s_instace = null;
+        private static int countSampling { set; get; }
+     
 
         public static FlightLogModel Instance
         {
@@ -26,6 +28,7 @@ namespace Ex3.Models
                 {
                     s_instace = new FlightLogModel();
                     fileInfo = new Queue<FlightDetails>();
+                    countSampling = 0;
                 }
                 return s_instace;
             }
@@ -46,6 +49,7 @@ namespace Ex3.Models
                {
                    System.Diagnostics.Debug.WriteLine("Error in serialzing");
                }
+            SamplingCounter?.Invoke(this, new EventArgs());
         }
         public void LoadFileData()
         {
