@@ -34,7 +34,6 @@ namespace Ex3.Models {
             }
         }
 
-
         public string Ip { set; get; }
         public int Port { set; get; }
 
@@ -94,6 +93,12 @@ namespace Ex3.Models {
 
         public void Stop() {
             this.socket.Close();
+        }
+
+        public void Reset() {
+            if (this.socket != null) {
+                this.Stop();
+            }
         }
 
 

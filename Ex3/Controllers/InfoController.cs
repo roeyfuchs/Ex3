@@ -31,6 +31,7 @@ namespace Ex3.Controllers
             System.Net.IPAddress iPAddress;
             if (System.Net.IPAddress.TryParse(ip, out iPAddress)) {
                 ClientModel client = ClientModel.Instance;
+                client.Reset();
                 client.Ip = ip;
                 client.Port = port;
                 client.Start();
@@ -79,14 +80,9 @@ namespace Ex3.Controllers
 
         [HttpPost]
         public string SetValues() {
-            try {
-                ClientModel cl = ClientModel.Instance;
-                string str = cl.GetValues();
-                return str;
-            } catch (Exception e) {
-                System.Diagnostics.Debug.WriteLine(e.ToString());
-            }
-            return "lala";
+            ClientModel cl = ClientModel.Instance;
+            string str = cl.GetValues();
+            return str;
         }
     }
 }
