@@ -7,9 +7,11 @@ namespace Ex3.Models
 {
     public class FlightDetailsEventArgs : EventArgs
     {
-        private const string comma = ",";
-        private const string newLine = "\n";
         public FlightDetails FlightDetails { get; set; }
+        /// <summary>
+        /// constuctor
+        /// </summary>
+        /// <param name="flightDetails"></param>
         public FlightDetailsEventArgs(FlightDetails flightDetails)
         {
             this.FlightDetails = flightDetails;
