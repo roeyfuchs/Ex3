@@ -40,10 +40,8 @@ namespace Ex3.Controllers
                 
                 this.client.PropertyChanged += this.Client_PropertyChanged;
                
-                ViewBag.Interval = (int)((1 / (Double)interval) * 1000);
                 ViewBag.Lon = Double.NaN;
                 ViewBag.Lat = Double.NaN;
-                ViewBag.sec = interval;
             } else {
                 //display/file name/interval
                 string filePath = ip;
@@ -52,6 +50,8 @@ namespace Ex3.Controllers
                 this.flightLogModel = FlightLogModel.Instance;
                 this.flightLogModel.FileName = filePath;
             }
+            ViewBag.Interval = (int)((1 / (Double)interval) * 1000);
+            ViewBag.sec = interval;
             return View();
         }
         [HttpGet]

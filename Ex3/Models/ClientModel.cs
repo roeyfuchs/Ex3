@@ -16,7 +16,7 @@ using System.Xml;
 namespace Ex3.Models {
     public class ClientModel : IInfoModel {
         private Socket socket;
-        private const int bufferSize = 1024;
+        private const int bufferSize = 512;
         private const string lonCommand = "get /position/longitude-deg\r\n";
         private const string latCommand = "get /position/latitude-deg\r\n";
         private const string throttleCommand = "get /controls/engines/current-engine/throttle\r\n";
@@ -100,10 +100,13 @@ namespace Ex3.Models {
         }
 
         private double GetInfo(string str) {
+            System.Diagnostics.Debug.WriteLine("Here");
+            this.socket.NoDelay = true;
             this.socket.Send(System.Text.Encoding.ASCII.GetBytes(str));
             byte[] buffer = new byte[bufferSize];
             int iRx = socket.Receive(buffer);
             string recv = Encoding.ASCII.GetString(buffer, 0, iRx);
+            System.Diagnostics.Debug.WriteLine("Done");
             return FromSimToDobule(recv);
         }
 
