@@ -6,19 +6,14 @@
 <canvas id="myCanvas" style="border:1px solid #000000;"></canvas>
 
 <script>
+    var tempx;
+    var tempy;
     var width = 180;
     var height = 90;
     document.getElementById("myCanvas").style.height = "100vh";
     document.getElementById("myCanvas").style.width = "100vw";
-    var tempx;
-    var tempy;
-    var temp;
-    var arrX = [];
-    var arrY = [];
-    var y;
-    var x;
-    var resy = [];
-    var resx = [];
+
+
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
@@ -29,36 +24,32 @@
         var c = document.getElementById("myCanvas");
         var ctx = c.getContext("2d");
         ctx.translate(width, height);
-        var index = 0;
-        await sleep(@ViewBag.Interval);
-        refreshData();
+        var arrX = [];
+        var arrY = [];
+        var y;
+        var x;
         while (online) {
-            console.log("index: " + index);
-            if (index*@ViewBag.Interval > @ViewBag.sec*1000)  {
-                console.log("going refresh!");
-                refreshData();
-                index = 0;
-        }
-        temp = resy.shift();
-            if (temp != null) {
-            //console.log("add value");
-            arrY.push(temp);
-        }
-        temp = resx.shift();
-
-        if (temp != null) {
-            arrX.push(temp);
-        }
+            refreshData();
+            y = tempy;
+            x = tempx;
+            //in a case of undefined infromation from the simultaor (error in socket for example)
+            if (typeof y == 'undefined' || typeof x == 'undefined') {
+                await sleep(@ViewBag.Interval);
+                continue;
+            }
+            if (isNaN(x) || isNaN(y)) {
+                online = false;
+                continue;
+             }
+            arrX.push(x);
+            arrY.push(y);
             drawAll(ctx, arrX, arrY);
             await sleep(@ViewBag.Interval);
-            index++;
          }
-    alert('route finished!\nhope you enjoyd to flight with us,\nEl-ILAN');
-    }
+            alert('route finished!\nhope you enjoyd to flight with us,\nEl-ILAN')
+      }
 
-
-    function drawAll(ctx, x, y) {
-        console.log("Draw! : " + x.length);
+        function drawAll(ctx, x, y) {
             ctx.clearRect(-width, -height, ctx.canvas.width, ctx.canvas.height);
             ctx.beginPath();
             ctx.moveTo(x[0], y[0]);
@@ -67,6 +58,7 @@
               mx = (i*i) + x[i];
               my = (i * i) + y[i];
                 ctx.lineTo(mx, my);
+                console.log("mx :" + mx + " my: " + my);
             }
             /*just for testing: */
             endX = x[x.length - 1] + (x.length - 1) * (x.length - 1);
@@ -83,30 +75,13 @@
             type: "Post",
             url: "/Info/SetValues",
             success: function (txt) {
-                console.log(txt);
                 parser = new DOMParser();
                 xmlDoc = parser.parseFromString(txt, "text/xml");
-                tempy = xmlDoc.getElementsByTagName("Lat")[0].childNodes[0].nodeValue;
-                tempx = xmlDoc.getElementsByTagName("Lon")[0].childNodes[0].nodeValue;
-                if (tempy.indexOf(',') > -1) {
-                    resy = tempy.split(',').map(function (item) {
-                        return parseFloat(item, 10);
-                    });
-                } else {
-                    resy.push(parseFloat(tempy));
-                }
-                if (tempx.indexOf(',') > -1) {
-                    resx = tempx.split(',').map(function (item) {
-                        return parseFloat(item, 10);
-                    });
-                } else {
-                    resx.push(parseFloat(tempx));
-                }
-            },
+                tempy = parseFloat(xmlDoc.getElementsByTagName("Lat")[0].childNodes[0].nodeValue);
+                tempx = parseFloat(xmlDoc.getElementsByTagName("Lon")[0].childNodes[0].nodeValue);
+            }
+
         });
-
-        
-
     }
 
 
