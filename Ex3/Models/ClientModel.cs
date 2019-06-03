@@ -36,15 +36,20 @@ namespace Ex3.Models {
 
         public string Ip { set; get; }
         public int Port { set; get; }
-
+        /// <summary>
+        /// create new FlightDetails with current values from our simulator
+        /// </summary>
+        /// <returns></returns>
         public string GetValues() {
             double lat = GetLat();
             double lon = GetLon();
             double throttle = GetThrottle();
             double rudder = GetRudder();
             FlightDetails flightDetails = new FlightDetails(lon, lat, throttle, rudder);
+            //notify listeners
             this.PropertyChanged?.Invoke(this, new FlightDetailsEventArgs(flightDetails));
-            StringBuilder sb = new StringBuilder();
+            //create xml node of flight detail
+            StringBuilder sb = new StringBuilder();         
             XmlWriterSettings settings = new XmlWriterSettings();
             XmlWriter writer = XmlWriter.Create(sb, settings);
             writer.WriteStartDocument();
@@ -55,7 +60,6 @@ namespace Ex3.Models {
             writer.Flush();
             return sb.ToString();
         }
-
         private double GetLat() {
             return GetInfo(latCommand);
         }
@@ -69,7 +73,11 @@ namespace Ex3.Models {
         private double GetRudder() {
             return GetInfo(rudderCommand);
         }
-
+        /// <summary>
+        /// get data from server
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         private double GetInfo(string str) {
             this.socket.Send(System.Text.Encoding.ASCII.GetBytes(str));
             byte[] buffer = new byte[bufferSize];
@@ -83,25 +91,35 @@ namespace Ex3.Models {
         public double Lon { get; set; }
 
 
-
+        /// <summary>
+        /// opent connection from the socket
+        /// </summary>
         public void Start() {
             this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             IPAddress ipAdd = IPAddress.Parse(this.Ip);
             IPEndPoint remoteEP = new IPEndPoint(ipAdd, this.Port);
             this.socket.Connect(remoteEP);
         }
-
+        /// <summary>
+        /// stop connection
+        /// </summary>
         public void Stop() {
             this.socket.Close();
         }
-
+        /// <summary>
+        /// reset connection
+        /// </summary>
         public void Reset() {
             if (this.socket != null) {
                 this.Stop();
             }
         }
 
-
+        /// <summary>
+        /// convert original data from simulator
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         private double FromSimToDobule(string str) {
             string onlyNum = Regex.Match(str, @"'(.*?[^\\])'").Value;
             onlyNum = onlyNum.Trim('\'');
