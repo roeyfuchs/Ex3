@@ -104,7 +104,6 @@ namespace Ex3.Models
         /// <returns></returns>
         public string GetCurrentFlightDetails()
         {
-
             lock (lockQueue)
             {
                 //if quque empty or simulation is over, reload data
