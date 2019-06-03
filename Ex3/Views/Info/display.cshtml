@@ -58,7 +58,6 @@
               mx = (i*i) + x[i];
               my = (i * i) + y[i];
                 ctx.lineTo(mx, my);
-                console.log("mx :" + mx + " my: " + my);
             }
             /*just for testing: */
             endX = x[x.length - 1] + (x.length - 1) * (x.length - 1);
@@ -75,10 +74,13 @@
             type: "Post",
             url: "/Info/SetValues",
             success: function (txt) {
+                console.log(txt);
                 parser = new DOMParser();
                 xmlDoc = parser.parseFromString(txt, "text/xml");
                 tempy = parseFloat(xmlDoc.getElementsByTagName("Lat")[0].childNodes[0].nodeValue);
                 tempx = parseFloat(xmlDoc.getElementsByTagName("Lon")[0].childNodes[0].nodeValue);
+                console.log(tempy);
+                console.log(tempx);
             }
 
         });

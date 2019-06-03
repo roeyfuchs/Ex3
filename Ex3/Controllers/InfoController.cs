@@ -56,9 +56,9 @@ namespace Ex3.Controllers
                 runAnimation = true;
                 this.flightLogModel = FlightLogModel.Instance;
                 this.flightLogModel.FileName = filePath;
+                interval = port; //no port
             }
             ViewBag.Interval = (int)((1 / (Double)interval) * 1000);
-            ViewBag.sec = interval;
             return View();
         }
         /// <summary>
