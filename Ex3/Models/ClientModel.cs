@@ -21,6 +21,7 @@ namespace Ex3.Models {
         private const string throttleCommand = "get /controls/engines/current-engine/throttle\r\n";
         private const string rudderCommand = "get /controls/flight/rudder\r\n";
         public event infoHandel PropertyChanged;
+        private readonly object lockSocket = new object();
         private static ClientModel s_instace = null;
 
 
@@ -79,12 +80,14 @@ namespace Ex3.Models {
         /// <param name="str"></param>
         /// <returns></returns>
         private double GetInfo(string str) {
-            this.socket.Send(System.Text.Encoding.ASCII.GetBytes(str));
-            byte[] buffer = new byte[bufferSize];
-            int iRx = socket.Receive(buffer);
-            string recv = Encoding.ASCII.GetString(buffer, 0, iRx);
-            recv = recv.Split('\r')[0];
-            return FromSimToDobule(recv);
+            lock (lockSocket) {
+                this.socket.Send(System.Text.Encoding.ASCII.GetBytes(str));
+                byte[] buffer = new byte[bufferSize];
+                int iRx = socket.Receive(buffer);
+                string recv = Encoding.ASCII.GetString(buffer, 0, iRx);
+                recv = recv.Split('\r')[0];
+                return FromSimToDobule(recv);
+            }
         }
 
         public double Lat { get; set; }
