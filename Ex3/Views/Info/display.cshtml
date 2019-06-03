@@ -55,14 +55,11 @@
             ctx.moveTo(x[0], y[0]);
             /* don't forget to delete the i*i */
             for (var i = 1; i < x.length; i++) {
-              mx = (i*i) + x[i];
-              my = (i * i) + y[i];
-                ctx.lineTo(mx, my);
+                ctx.lineTo(x[i], y[i]);
+                console.log("x :" + x[i] + " y: " + y[i]);
             }
-            /*just for testing: */
-            endX = x[x.length - 1] + (x.length - 1) * (x.length - 1);
-            endY = y[y.length - 1] + (y.length - 1) * (y.length - 1);
-            /* when submit, we need to change it to  x[x.length - 1] and y[y.length - 1]*/
+            endX = x[x.length - 1];
+            endY = y[y.length - 1];
 
             ctx.arc(endX, endY , 1, 0, 2 * Math.PI);
             ctx.stroke();
@@ -74,13 +71,10 @@
             type: "Post",
             url: "/Info/SetValues",
             success: function (txt) {
-                console.log(txt);
                 parser = new DOMParser();
                 xmlDoc = parser.parseFromString(txt, "text/xml");
                 tempy = parseFloat(xmlDoc.getElementsByTagName("Lat")[0].childNodes[0].nodeValue);
                 tempx = parseFloat(xmlDoc.getElementsByTagName("Lon")[0].childNodes[0].nodeValue);
-                console.log(tempy);
-                console.log(tempx);
             }
 
         });

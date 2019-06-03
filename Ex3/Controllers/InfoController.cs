@@ -52,7 +52,7 @@ namespace Ex3.Controllers
             } else {
                 //display/file name/interval
                 string filePath = ip;
-                int animationTime = port;
+                interval = port;
                 runAnimation = true;
                 this.flightLogModel = FlightLogModel.Instance;
                 this.flightLogModel.FileName = filePath;
