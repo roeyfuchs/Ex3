@@ -42,7 +42,6 @@ namespace Ex3.Controllers
                 client.Reset();
                 client.Ip = ip;
                 client.Port = port;
-                client.Interval = (int)((1 / (Double)interval) * 1000);
                 client.Start();
                 this.client = client;
                 //save info on view bag
