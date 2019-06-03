@@ -50,7 +50,6 @@ namespace Ex3.Controllers
                 ViewBag.Lon = Double.NaN;
                 ViewBag.Lat = Double.NaN;
             } else {
-                //display/file name/interval
                 string filePath = ip;
                 interval = port;
                 runAnimation = true;

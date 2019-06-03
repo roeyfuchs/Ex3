@@ -13,6 +13,8 @@ namespace Ex3.Models
 {
     public class FlightLogModel
     {
+        private const string folder = "/Utils";
+        private const string slash = "/";
         public event EventHandler SamplingCounter;
         public string FileName { get; set; }
         private static Queue<FlightDetails> fileInfo;
@@ -41,7 +43,7 @@ namespace Ex3.Models
         public void PropertyChanged(object sender, FlightDetailsEventArgs e)
         {
                BinaryFormatter bf = new BinaryFormatter();
-               FileStream fsout = new FileStream(FileName, FileMode.Append, FileAccess.Write, FileShare.None);
+               FileStream fsout = new FileStream(GetPath(FileName), FileMode.Append, FileAccess.Write, FileShare.None);
                try
                {
                    using (fsout)
@@ -63,7 +65,7 @@ namespace Ex3.Models
         {
                 fileInfo = new Queue<FlightDetails>();
                 BinaryFormatter bf = new BinaryFormatter();
-                FileStream fsin = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.None);
+                FileStream fsin = new FileStream(GetPath(FileName), FileMode.Open, FileAccess.Read, FileShare.None);
                 try
                 {
                     using (fsin)
@@ -88,6 +90,13 @@ namespace Ex3.Models
         public FlightDetails EnququeNanFightData()
         {
             return new FlightDetails(Double.NaN, Double.NaN, Double.NaN, Double.NaN);
+        }
+        private string GetPath(string fileName)
+        {
+            fileName = slash + fileName;
+           return HttpContext.Current.Server.MapPath(fileName);
+
+
         }
         /// <summary>
         /// return current fight detail
