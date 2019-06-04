@@ -26,6 +26,11 @@
         var arrY = [];
         var y;
         var x;
+        var onlyOne = false;
+        if (@ViewBag.Interval == 0) {
+            onlyOne = true;
+        }
+
         while (online) {
             //refresh for new data
             refreshData();
@@ -46,6 +51,9 @@
             arrY.push(y);
             //call to draw all
             drawAll(ctx, arrX, arrY);
+            if (onlyOne) {
+                return;
+            }
             //wait for interval
             await sleep(@ViewBag.Interval);
          }
